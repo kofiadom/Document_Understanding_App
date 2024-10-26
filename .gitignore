@@ -1,0 +1,11 @@
+# Exclude virtual environment folder
+venv/
+
+# Exclude environment variable file
+.env
+
+# Exclude vector database directory
+vector_db_dir/
+
+# Exclude Python cache files
+__pycache__/
