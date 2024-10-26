@@ -233,7 +233,7 @@ def main():
     with st.sidebar:
         st.subheader("Your documents")
         uploaded_files = st.file_uploader(
-            "Upload your PDFs here and click on 'Process'", 
+            "Upload your PDFs or CSV here and click on 'Process'", 
             accept_multiple_files=True
             )
         if st.button("Process"):
