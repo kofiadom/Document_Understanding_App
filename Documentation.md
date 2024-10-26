@@ -222,11 +222,7 @@ The Document Understanding App follows these key steps to process documents and 
 
 ## 11. Lessons Learned
 - **Successful implementation of ChromaDB**
-- **Streamlit Rendering Quirks:** Streamlit's dynamic rendering model, while powerful, can sometimes lead to unexpected behavior. It's crucial to pay close attention to component rendering order, state updates, and the potential for unintended re-renders, especially when working with interactive elements like radio buttons. 
-
-- **Session State Management is Key:** 
-    - Carefully planning how you use `st.session_state` is essential for preventing bugs, especially when dealing with user interactions and dynamic updates.
-    - Consider using unique keys for different interaction types or contexts to avoid key collisions and unintentional overwrites. 
+- **Streamlit Rendering Quirks:** Streamlit's dynamic rendering model, while powerful, can sometimes lead to unexpected behavior. It's crucial to pay close attention to component rendering order, state updates, and the potential for unintended re-renders, especially when working with interactive elements like radio buttons.  
 
 - **The Importance of Minimal Examples:**  When encountering persistent bugs, creating a minimal reproducible example (reprex) that isolates the issue is crucial for effective debugging.  
 
