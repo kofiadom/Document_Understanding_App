@@ -126,7 +126,8 @@ The Document Understanding App follows these key steps to process documents and 
 
 4. **Content Embedding and Storage:**
    - The processed text content from both PDF files is converted into numerical representations (embeddings) using OpenAI's embedding model.
-   - These embeddings, along with associated metadata (e.g., file name, chunk source), are stored in the ChromaDB vector database. 
+   - These embeddings, along with associated metadata (e.g., file name, chunk source), are stored in the ChromaDB vector database.
+   - The ChromaDB is persisted on the local disk. 
 
 5. **Question Input:**
    - The user enters a question in the chat interface. 
