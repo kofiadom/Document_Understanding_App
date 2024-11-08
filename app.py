@@ -43,6 +43,9 @@ def save_feedback(question: str, response: str, feedback: dict, context: str = N
 
 def refine_response(question: str, original_response: str, context: str, chain):
     """Generate a refined response based on feedback context."""
+    if chain is None:
+        return "Error: No valid chain available for refining the response."
+
     refinement_prompt = f"""
     Original Question: {question}
     Original Response: {original_response}
@@ -58,40 +61,30 @@ def refine_response(question: str, original_response: str, context: str, chain):
 def collect_feedback(question: str, response: str, chain):
     """Collect feedback and refine response if needed."""
     feedback_key = f"feedback_{hash(response)}"
-    context_key = f"context_{hash(response)}"
 
     # Initialize feedback state
     if feedback_key not in st.session_state:
         st.session_state[feedback_key] = {"feedback_option": None, "context": ""}
 
     st.write("Was this response helpful?")
-
-    # Use variables to store values from session state
-    feedback_option = st.session_state[feedback_key]["feedback_option"]
-    context = st.session_state[feedback_key]["context"]
         
     # Radio buttons for feedback selection
     feedback_option = st.radio(
         "Select Feedback",
         options=["👍 Yes, it was helpful", "👎 No, it could be improved"],
+        index=0 if st.session_state[feedback_key]["feedback_option"] is None else 1 if st.session_state[feedback_key]["feedback_option"] == "👎 No, it could be improved" else 0
     )
 
-    # Update session state AFTER the radio button is rendered
+    # Update session state with the radio button is rendered
     st.session_state[feedback_key]["feedback_option"] = feedback_option
 
     # Conditional text input 
-    if st.session_state[feedback_key]["feedback_option"] == "👎 No, it could be improved": 
-        context = st.text_input("What could be improved?")
+    if feedback_option == "👎 No, it could be improved": 
+        context = st.text_input("What could be improved?", value=st.session_state[feedback_key]["context"])
         st.session_state[feedback_key]["context"] = context  # Update session state 
 
     # Button to submit feedback
     if st.button("Submit Feedback"):
-        feedback_option = st.session_state[feedback_key]["feedback_option"]
-        context = st.session_state[feedback_key]["context"]
-
-        print("Feedback Option (On Submit):", feedback_option) 
-        print("Context (On Submit):", context)
-
         feedback_data = {"rating": "positive" if feedback_option == "👍 Yes, it was helpful" else "negative"}
         if feedback_option == "👎 No, it could be improved" and context:
             feedback_data["context"] = context
@@ -99,25 +92,26 @@ def collect_feedback(question: str, response: str, chain):
         save_feedback(question, response, feedback_data, context)
         st.success("Thank you for your feedback!")
 
-        # Generate a refined response if feedback is negative and context is provided
-        if feedback_option == "👎 No, it could be improved" and context:
-            st.write("Generating refined response based on your feedback...")
-            refined_response = refine_response(
+        if chain is not None:
+            # Generate a refined response if feedback is negative and context is provided
+            if feedback_option == "👎 No, it could be improved" and context:
+                st.write("Generating refined response based on your feedback...")
+                refined_response = refine_response(
                     question,
                     response,
                     context,
                     chain
                 )
                 
-        # Display the refined response in chat
-        with st.chat_message("assistant"):
-            st.markdown("**Refined Response:**")
-            st.markdown(refined_response)
-            st.session_state.chat_history.append(
-                {"role": "assistant", "content": f"**Refined Response:** {refined_response}"}
-            )
-    # Reset the feedback option and context in session state
-    st.session_state[feedback_key] = {"feedback_option": None, "context": ""}
+                # Display the refined response in chat
+                with st.chat_message("assistant"):
+                    st.markdown("**Refined Response:**")
+                    st.markdown(refined_response)
+                    st.session_state.chat_history.append(
+                        {"role": "assistant", "content": f"**Refined Response:** {refined_response}"}
+                    )
+        else:
+            st.error("Error: No valid chain available for refining the response.")
 
 
 def handle_uploaded_files(uploaded_files):
@@ -185,6 +179,9 @@ def main():
 
     if "csv_agent" not in st.session_state:
         st.session_state.csv_agent = None
+
+    if "current_chain" not in st.session_state:
+        st.session_state.current_chain = None 
     
     st.header("Document Understanding App :books:")
 
@@ -199,8 +196,6 @@ def main():
                 
         user_question = st.chat_input("Ask a question about your documents:")
 
-        current_chain = None
-
         if user_question:
             st.session_state.chat_history.append({"role": "user", "content": user_question})
             with st.chat_message("user"):
@@ -210,24 +205,30 @@ def main():
             if st.session_state.csv_agent:
                 response = st.session_state.csv_agent({"input": user_question})
                 assistant_response = response["output"]
-                current_chain = st.session_state.csv_agent
+                st.session_state.current_chain = st.session_state.csv_agent
+            elif st.session_state.conversational_chain:
+                response = st.session_state.conversational_chain({"question": user_question})
+                assistant_response = response["answer"]
+                st.session_state.current_chain = st.session_state.conversational_chain
             else:
-                if "conversational_chain" in st.session_state:
-                    response = st.session_state.conversational_chain({"question": user_question})
-                    assistant_response = response["answer"]
-                    current_chain = st.session_state.conversational_chain
-                else:
-                    assistant_response = "The conversational chain is not initialized."
-                    current_chain = None
-
-        
+                assistant_response = "The conversational chain is not initialized."
+                st.session_state.current_chain = None
+      
             with st.chat_message("assistant"):
                 st.markdown(assistant_response)
                 st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
 
-    with feedback_container: # Feedback section within its container
-        if current_chain:  # Only show feedback if we have a chain to use for refinement
-            collect_feedback(user_question, assistant_response, current_chain) 
+
+    with feedback_container:
+        if st.session_state.chat_history:  # Only show feedback if there is chat history
+            user_question = st.session_state.chat_history[-1]["content"]
+            assistant_response = st.session_state.chat_history[-1]["content"]  # Get the last assistant response
+
+            # Debugging: Print the current_chain status
+            #st.write(f"Current Chain: {st.session_state.current_chain}")
+
+            # Pass the current_chain from the session state to collect_feedback
+            collect_feedback(user_question, assistant_response, st.session_state.current_chain) 
 
 
     with st.sidebar:

@@ -3,5 +3,50 @@
     "timestamp": "2024-10-26T02:37:57.960980",
     "feedback_option": "\ud83d\udc4e No, it could be improved",
     "context": "Make improvement"
+  },
+  {
+    "timestamp": "2024-11-08T10:39:24.253725",
+    "feedback_option": "\ud83d\udc4e No, it could be improved",
+    "context": "the response is wrong"
+  },
+  {
+    "timestamp": "2024-11-08T11:07:30.002367",
+    "question": "The clinical guideline was developed by the AAFP's Commission on Health of the Public and Science, with input from physicians with expertise in guideline development and family medicine.",
+    "response": "The clinical guideline was developed by the AAFP's Commission on Health of the Public and Science, with input from physicians with expertise in guideline development and family medicine.",
+    "feedback": {
+      "rating": "negative",
+      "context": "AAFP guideline is also tailored to America"
+    },
+    "context": "AAFP guideline is also tailored to America"
+  },
+  {
+    "timestamp": "2024-11-08T11:23:04.110559",
+    "question": "The clinical guideline was developed by the AAFP's Commission on Health of the Public and Science, along with a guideline development group that included physicians with expertise in guideline development and family medicine.",
+    "response": "The clinical guideline was developed by the AAFP's Commission on Health of the Public and Science, along with a guideline development group that included physicians with expertise in guideline development and family medicine.",
+    "feedback": {
+      "rating": "negative",
+      "context": "AAFP is for America"
+    },
+    "context": "AAFP is for America"
+  },
+  {
+    "timestamp": "2024-11-08T11:48:51.873987",
+    "question": "The guideline was developed by a guideline development group appointed by the AAFP\u2019s Commission on Health of the Public and Science. The group consisted of physicians with expertise in guideline development and family medicine.",
+    "response": "The guideline was developed by a guideline development group appointed by the AAFP\u2019s Commission on Health of the Public and Science. The group consisted of physicians with expertise in guideline development and family medicine.",
+    "feedback": {
+      "rating": "negative",
+      "context": "AAFP is for Americans"
+    },
+    "context": "AAFP is for Americans"
+  },
+  {
+    "timestamp": "2024-11-08T12:50:05.996197",
+    "question": "The clinical guideline was written by the AAFP\u2019s Commission on Health of the Public and Science appointed guideline development group, which included physicians with expertise in guideline development and family medicine.",
+    "response": "The clinical guideline was written by the AAFP\u2019s Commission on Health of the Public and Science appointed guideline development group, which included physicians with expertise in guideline development and family medicine.",
+    "feedback": {
+      "rating": "negative",
+      "context": "AAFP is tailored to America"
+    },
+    "context": "AAFP is tailored to America"
   }
 ]
