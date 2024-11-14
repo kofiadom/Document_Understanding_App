@@ -200,7 +200,7 @@ The Document Understanding App follows these key steps to process documents and 
 - Enables users to provide feedback on response and provide additional context for refined responses (if feedback was negative)
 
 ## 7. Challenges Faced
-- **Feedback option selection**: After selecting a feedback option (whether yes or no) the radio buttons disappear and the feedback is not recorded in the `feedback_data.json file`. To solve the problem, I isolated the collect_feedback() to test radio button selection. In isolation, it worked and the selected feedback option was recorded in the json file. Still investigating the problem.
+- **Feedback option selection**: After selecting a feedback option (whether yes or no) the radio buttons disappear and the feedback is not recorded in the `feedback_data.json file`. To solve the problem, I isolated the collect_feedback() to test radio button selection. In isolation, it worked and the selected feedback option was recorded in the json file. After several investigations, I solved the problem.
 
 ## 8. Future Enhancements
 
